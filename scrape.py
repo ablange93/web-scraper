@@ -39,8 +39,6 @@ parser = MyHTMLParser()
 parser.feed(html_str)
 
 # QUESTION #1) Display total qty. of HTML elements
-#
-#
 # Count quantity of matching start/end tag pairs
 complete_count = 0
 for start_tag in parser.lsStartTags:
@@ -49,8 +47,6 @@ for start_tag in parser.lsStartTags:
 print("\nQUESTION #1: \n" + "    Total number of HTML elements: "+str(complete_count) + "\n")
 
 # QUESTION #2) Display top 5 most frequently used HTML tags & their respective counts
-#
-#
 # Aggregate all tags
 all_tags = parser.lsStartTags + parser.lsEndTags
 
