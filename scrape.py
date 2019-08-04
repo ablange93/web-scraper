@@ -25,6 +25,40 @@ class MyHTMLParser(HTMLParser):
         self.lsComments.append(data)
 
 
+def element_counter(start_tags, end_tags):
+    complete_count = 0
+    for start_tag in start_tags:
+        if start_tag in end_tags:
+            complete_count += 1
+    return complete_count
+
+
+def tag_counter(start_tags, end_tags):
+    # Aggregate all tags
+    all_tags = parser.lsStartTags + parser.lsEndTags
+    # Create map to hold count of each tag
+    tag_map = {}
+    for tag in all_tags:
+        if tag not in tag_map:
+            tag_map[tag] = 1
+        else:
+            tag_map[tag] += 1
+    return tag_map
+
+
+def top_5_tag_finder(tag_map):
+    # Sort tag counts in ascending order
+    asc_tag_count = sorted(list(tag_map.values()))
+
+    # Create dict of the top 5 tag counts and their respective tags
+    top_5_tag_values = asc_tag_count[-5:]
+    top_5_tags = {}
+    for val in top_5_tag_values:
+        for tag in tag_map:
+            if tag_map[tag] == val and val not in top_5_tags:
+                top_5_tags[val] = tag
+    return top_5_tags
+
 # Request using known browser agent
 req = Request('http://ordergroove.com/company', headers={'User-Agent': 'Mozilla/5.0'})
 webpage = urlopen(req).read()
@@ -39,37 +73,14 @@ parser = MyHTMLParser()
 parser.feed(html_str)
 
 # QUESTION #1) Display total qty. of HTML elements
-# Count quantity of matching start/end tag pairs
-complete_count = 0
-for start_tag in parser.lsStartTags:
-    if start_tag in parser.lsEndTags:
-        complete_count += 1
-print("\nQUESTION #1: \n" + "    Total number of HTML elements: "+str(complete_count) + "\n")
+element_count = element_counter(parser.lsStartTags, parser.lsEndTags)
 
 # QUESTION #2) Display top 5 most frequently used HTML tags & their respective counts
-# Aggregate all tags
-all_tags = parser.lsStartTags + parser.lsEndTags
-
-# Create map to hold count of each tag
-tag_map = {}
-for tag in all_tags:
-    if tag not in tag_map:
-        tag_map[tag] = 1
-    else:
-        tag_map[tag] += 1
-
-# Sort tag counts in ascending order
-asc_tag_count = sorted(list(tag_map.values()))
-
-# Create dict of the top 5 tag counts and their respective tags
-top_5_tag_values = asc_tag_count[-5:]
-top_5_tags = {}
-for val in top_5_tag_values:
-    for tag in tag_map:
-        if tag_map[tag] == val and val not in top_5_tags:
-            top_5_tags[val] = tag
+tag_map = tag_counter(parser.lsStartTags, parser.lsEndTags)
+top_5_tags = top_5_tag_finder(tag_map)
 
 # Display results
+print("\nQUESTION #1: \n" + "    Total number of HTML elements: "+str(element_count) + "\n")
 print("QUESTION #2:")
 for count in top_5_tags:
     print("    '" + top_5_tags[count] + "' was detected " + str(count) + " number of times.")
