@@ -9,7 +9,7 @@ class MyHTMLParser(HTMLParser):
     start and end tags.
     """
 
-    # Initializing lists
+    # Intialize lists
     lsStartTags = list()
     lsEndTags = list()
     lsStartEndTags = list()
