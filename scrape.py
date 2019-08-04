@@ -4,6 +4,10 @@ from html.parser import HTMLParser
 
 # Create new parser by overriding the HTMLParser class
 class MyHTMLParser(HTMLParser):
+    """
+    Class inherits the HTMLParser class and overrides it to generate lists of all the
+    start and end tags.
+    """
 
     # Initializing lists
     lsStartTags = list()
@@ -26,6 +30,13 @@ class MyHTMLParser(HTMLParser):
 
 
 def element_counter(start_tags, end_tags):
+    """
+    Function will generate a count of all matching start & end tag pairs. This count is
+    indicative of the total quantity of elements.
+    :param start_tags:
+    :param end_tags:
+    :return: Integer representing total quantity of elements.
+    """
     complete_count = 0
     for start_tag in start_tags:
         if start_tag in end_tags:
@@ -34,6 +45,13 @@ def element_counter(start_tags, end_tags):
 
 
 def tag_counter(start_tags, end_tags):
+    """
+    Function will determine how many times each tag was used and store each tag and its
+    respective count in a dictionary.
+    :param start_tags: List of all starting tags.
+    :param end_tags: List of all ending tags.
+    :return: tag_map: Dictionary
+    """
     # Aggregate all tags
     all_tags = parser.lsStartTags + parser.lsEndTags
     # Create map to hold count of each tag
@@ -47,6 +65,12 @@ def tag_counter(start_tags, end_tags):
 
 
 def top_5_tag_finder(tag_map):
+    """
+    Function accepts a map of each HTML tag and its count, and returns a dictionary containing the
+    top 5 most frequently used tags, in which the counts are the keys, and the tags are the values.
+    :param tag_map: Dictionary containing all HTML tags as keys and their respective counts as values.
+    :return: top_5_tags: Dictionary of top 5 most frequently used tag counts and their tag values.
+    """
     # Sort tag counts in ascending order
     asc_tag_count = sorted(list(tag_map.values()))
 
@@ -58,6 +82,7 @@ def top_5_tag_finder(tag_map):
             if tag_map[tag] == val and val not in top_5_tags:
                 top_5_tags[val] = tag
     return top_5_tags
+
 
 # Request using known browser agent
 req = Request('http://ordergroove.com/company', headers={'User-Agent': 'Mozilla/5.0'})
