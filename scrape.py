@@ -25,11 +25,11 @@ class MyHTMLParser(HTMLParser):
         self.lsComments.append(data)
 
 
-# request using known browser agent
+# Request using known browser agent
 req = Request('http://ordergroove.com/company', headers={'User-Agent': 'Mozilla/5.0'})
 webpage = urlopen(req).read()
 
-# convert HTML content from bytes to string
+# Convert HTML content from bytes to string
 html_str = webpage.decode("utf8")
 
 # Instantiate a new parser object
@@ -38,17 +38,42 @@ parser = MyHTMLParser()
 # Feed new parser HTML content
 parser.feed(html_str)
 
-# Q1) Display total qty. of HTML elements
+# QUESTION #1) Display total qty. of HTML elements
+#
+#
+# Count quantity of matching start/end tag pairs
 complete_count = 0
 for start_tag in parser.lsStartTags:
-    # Count number of matching tags
     if start_tag in parser.lsEndTags:
         complete_count += 1
-print("Total number of HTML elements: "+str(complete_count))
+print("\nQUESTION #1: \n" + "    Total number of HTML elements: "+str(complete_count) + "\n")
 
+# QUESTION #2) Display top 5 most frequently used HTML tags & their respective counts
+#
+#
+# Aggregate all tags
+all_tags = parser.lsStartTags + parser.lsEndTags
 
-# Q2) Display top 5 most frequently used HTML tags & their respective counts
+# Create map to hold count of each tag
+tag_map = {}
+for tag in all_tags:
+    if tag not in tag_map:
+        tag_map[tag] = 1
+    else:
+        tag_map[tag] += 1
 
-# write to file
-# with open("og_site.html", "w") as new_file:
-#     new_file.write(str(tags))
+# Sort tag counts in ascending order
+asc_tag_count = sorted(list(tag_map.values()))
+
+# Create dict of the top 5 tag counts and their respective tags
+top_5_tag_values = asc_tag_count[-5:]
+top_5_tags = {}
+for val in top_5_tag_values:
+    for tag in tag_map:
+        if tag_map[tag] == val and val not in top_5_tags:
+            top_5_tags[val] = tag
+
+# Display results
+print("QUESTION #2:")
+for count in top_5_tags:
+    print("    '" + top_5_tags[count] + "' was detected " + str(count) + " number of times.")
