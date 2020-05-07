@@ -8,4 +8,4 @@ The following results will be printed to your console:
     1) Total qty. of HTML elements.
     2) Top 5 most frequently used HTML tags & their respective counts.
     
-NOTE: The URL 'http://ordergroove.com/company' is hardcoded into the scrape.py module into line #88.
+NOTE: The URL 'http://ordergroove.com/company' is hardcoded into the scrape.py module (line #88).
